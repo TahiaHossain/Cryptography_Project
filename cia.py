@@ -4,8 +4,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
-
-from confidentiality import decrypt_file, encrypt_file
+from confidentiality import *
 
 def generate_key_pair():
     private_key = rsa.generate_private_key(
@@ -42,9 +41,11 @@ def load_public_key(filename):
         pem_data = key_file.read()
         return serialization.load_pem_public_key(pem_data)
 
-def sign_data(private_key, data):
+def sign_data(private_key, input_filename):
+    original_hash = calculate_hash(input_filename)
+    
     return private_key.sign(
-        data,
+        original_hash,
         padding.PSS(
             mgf=padding.MGF1(hashes.SHA256()),
             salt_length=padding.PSS.MAX_LENGTH
@@ -52,11 +53,12 @@ def sign_data(private_key, data):
         hashes.SHA256(),
     )
 
-def verify_signature(public_key, signature, data):
+def verify_signature(public_key, signature, decrypted_filename):
+    decrypted_hash = calculate_hash(decrypted_filename)
     try:
         public_key.verify(
             signature,
-            data,
+            decrypted_hash,
             padding.PSS(
                 mgf=padding.MGF1(hashes.SHA256()),
                 salt_length=padding.PSS.MAX_LENGTH
@@ -83,7 +85,7 @@ def main():
     public_key_filename = "public_key.pem"
     input_filename = "secret.txt"
     encrypted_filename = "encrypted.txt"
-    decrypted_filename = "decrypted.txt"
+    decrypted_filename = "secret.txt"
 
     # Generate a new encryption key pair and save them to files
     private_key, public_key = generate_key_pair()
@@ -91,23 +93,19 @@ def main():
     save_public_key(public_key, public_key_filename)
 
     # Encrypt the input file
-    symmetric_key = Fernet.generate_key()
-    encrypt_file(symmetric_key, input_filename, encrypted_filename)
+    # symmetric_key = Fernet.generate_key()
+    # encrypt_file(symmetric_key, input_filename, encrypted_filename)
 
     # Decrypt the encrypted file
-    decrypt_file(symmetric_key, encrypted_filename, decrypted_filename)
-
-    # Calculate hash of the original file
-    original_hash = calculate_hash(input_filename)
+    # decrypt_file(symmetric_key, encrypted_filename, decrypted_filename)
 
     # Load private key and sign the hash
     private_key = load_private_key(private_key_filename)
-    signature = sign_data(private_key, original_hash)
+    signature = sign_data(private_key, input_filename)
 
     # Verify the signature and integrity of the decrypted file
-    decrypted_hash = calculate_hash(decrypted_filename)
     public_key = load_public_key(public_key_filename)
-    is_signature_valid = verify_signature(public_key, signature, decrypted_hash)
+    is_signature_valid = verify_signature(public_key, signature, decrypted_filename)
 
     if is_signature_valid:
         print("File integrity and authenticity verified successfully.")

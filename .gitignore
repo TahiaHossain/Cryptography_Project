@@ -1,0 +1,7 @@
+salts
+__pycache__
+encrypted.txt
+decrypted.txt
+private_key.pem
+public_key.pem
+signature1.sig
