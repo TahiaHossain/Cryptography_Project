@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import filedialog, simpledialog, messagebox
 from cryptography.fernet import InvalidToken
 import confidentiality
-from tkinter import ttk
 from cia import *
 import os
 
@@ -85,17 +84,13 @@ def verify_signature_button_click():
 root = tk.Tk()
 root.title("File Encryption/Decryption")
 
-style = ttk.Style()
-style.configure("Custom.TButton", background="light blue")
-
 # Create buttons for encryption and decryption
-encrypt_button = ttk.Button(root, text="Encrypt File", command=encrypt_button_click, style="Custom.TButton")
-decrypt_button = ttk.Button(root, text="Decrypt and read", command=decrypt_button_click, style="Custom.TButton")
-generate_key_pair_button = ttk.Button(root, text="Generate Key Pair", command=generate_key_pair_button_click, style="Custom.TButton")
-sign_file_button = ttk.Button(root, text="Sign File", command=sign_button_click, style="Custom.TButton")
-verify_signature_button = ttk.Button(root, text="Verify Signature", command=verify_signature_button_click, style="Custom.TButton")
+encrypt_button = tk.Button(root, text="Encrypt File", command=encrypt_button_click)
+decrypt_button = tk.Button(root, text="Decrypt and read", command=decrypt_button_click)
+generate_key_pair_button = tk.Button(root, text="Generate Key Pair", command=generate_key_pair_button_click)
+sign_file_button = tk.Button(root, text="Sign File", command=sign_button_click)
+verify_signature_button = tk.Button(root, text="Verify Signature", command=verify_signature_button_click)
 
-# make the buttons larger, colorful and prettierr
 encrypt_button.config(height=5, width=20, bg="light blue")
 decrypt_button.config(height=5, width=20, bg="light blue")
 generate_key_pair_button.config(height=5, width=20, bg="light blue")
