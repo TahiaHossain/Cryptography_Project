@@ -1,4 +1,22 @@
 from cryptography.fernet import Fernet
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from cryptography.hazmat.primitives import serialization
+from os import urandom
+
+def derive_key_from_password(password):
+    salt = generate_salt()
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        iterations=100000,
+        salt=salt,
+        length=32  # Length of the derived key
+    )
+    key = kdf.derive(password)
+    return key
+
+def generate_salt():
+    return urandom(16)  # Generate a random 16-byte salt
 
 def generate_key():
     return Fernet.generate_key()
@@ -34,14 +52,14 @@ def main():
     decrypted_filename = "decrypted.txt"
 
     # Generate a new key and save it to a file
-    key = generate_key()
-    write_key(key, key_filename)
-
-    # ask = input("Encrypt or Decrypt? Type 1 for Ecryption and 2 for Decryption. ")
     
     # Encrypt the input file
+    password = input("Enter a password: ")
+    password = password.encode()  # Convert to bytes
 
-    # if ask == 1 :
+    # Derive a key from the password
+
+    key = password
     encrypt_file(key, input_filename, encrypted_filename)
 
     # Decrypt the encrypted file
