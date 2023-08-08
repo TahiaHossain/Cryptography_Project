@@ -115,4 +115,5 @@ def main():
         print("WARNING: File integrity or authenticity verification failed!")
 
 if __name__ == "__main__":
+    print("----PROGRAM STARTED----")
     main()

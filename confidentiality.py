@@ -29,7 +29,7 @@ def decrypt_file(key, input_filename, output_filename):
 
 def main():
     key_filename = "encryption_key.key"
-    input_filename = "/Users/tahiahossain/Documents/490/Project/secret.txt"
+    input_filename = "secret.txt"
     encrypted_filename = "encrypted.txt"
     decrypted_filename = "decrypted.txt"
 
