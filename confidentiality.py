@@ -16,11 +16,11 @@ def read_from_file(filename):
 def generate_salt():
     print("Generating salt...")
     salt = urandom(16) # Generate a random 16-byte salt
-    write_to_file(salt, "salts/salt.txt")
+    write_to_file(salt, "salt.txt")
     return salt  
 
 def generate_key_from_password(password, salt = None):
-    if not salt:
+    if salt == None:
         salt = generate_salt()
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
@@ -43,7 +43,7 @@ def encrypt_file(password, input_filename):
     with open('encrypted.txt', "wb") as output_file:
         output_file.write(encrypted_data)
 
-def decrypt_file(password, input_filename, output_filename='decrypted.txt',  salt='salts/salt.txt', write_the_output = True):
+def decrypt_file(password, input_filename, output_filename='decrypted.txt',  salt='salt.txt', write_the_output = True):
     password = password.encode() 
     salt = read_from_file(salt)
     key = generate_key_from_password(password, salt=salt)
