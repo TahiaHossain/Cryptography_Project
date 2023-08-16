@@ -32,7 +32,7 @@ def encrypt_button_click():
             if confirm:
                 confidentiality.encrypt_file(password, file_path)
                 messagebox.showinfo("Success", "File encrypted successfully.")
-                os.remove(file_path)
+                # os.remove(file_path)
 
 def decrypt_button_click():
     file_path = filedialog.askopenfilename(title="Select a file to decrypt")
